@@ -3,7 +3,7 @@
 #include <time.h>
 #include <cuda_runtime.h>
 
-#define N 10000000 // Tamanho do vetor = 10 milhões
+#define N 100000000 // Tamanho do vetor = 10 milhões
 #define BLOCK_SIZE 256 // Número de threads por bloco
 
 // a,b,c vetores
