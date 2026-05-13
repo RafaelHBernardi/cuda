@@ -49,10 +49,35 @@ terminado a tarefa que o primeiro está executando. Isso pode dar instabilidade 
 - `__syncwarps();` sincroniza todas as threads com o warp
 
 - Sincronizamos as threads pq as threads são assincronas e podem ser executadas em qualquer ordem. Porém alguns precisam ser em ordens pq dependem do output dos outros 
+Exemplo: somar 2 vetores A + B e armazenar em C depois somar 1 em C, cada elemento vai ser somado paralelamente, pode haver algum
+erro e algum dos resultados de C ser só 1 enves de c[i] = a[i] + b[i] + 1
 
-- For example, if we want to vector add the two arrays `a = [1, 2, 3, 4]`, `b = [5, 6, 7, 8]` and store the result in `c`, then add 1 to each element in `c`, we need to ensure all the multiply operations catch up before moving onto adding (following PEDMAS). If we don't sync threads here, there is a possibility that we may get an incorrect output vector where a 1 is added before a multiply.
 
-- A more clear but less common example would be when we parallelize a bit shift. If we have a bit shift operation that is dependent on the previous bit shift operation, we need to make sure that the previous bit shift operation is done before we move onto the next one.
-  ![](../assets/bitshift1.png)
 
-![](../assets/barrier.png)
+
+## Thread Safety
+
+- [Is CUDA thread-safe?](https://forums.developer.nvidia.com/t/is-cuda-thread-safe/2262/2)
+- quando um pedaço do código é seguro para 1 thread ele pode ser executado por multiplos threads
+ao mesmo tempo sem ter que lidar com race conditions ou outros problemas
+
+- Race Conditions são prevenidas pelo comando `cudaDeviceSynchronize()`
+
+- if you are wondering about calling multiple GPU kernels with different CPU threads,
+  refer to the link above.
+
+## SIMD/SIMT (Single Instruction, Multiple Threads)
+
+- Não é tão importante por agora, será retomado depois
+
+- [Can CUDA use SIMD instructions?](https://stackoverflow.com/questions/5238743/can-cuda-use-simd-extensions)
+
+> [Warp Level Primitives](https://developer.nvidia.com/blog/using-cuda-warp-level-primitives/)
+
+- https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#thread-hierarchy 
+
+## Math intrinsics
+- Instruções no dispositivo fundamentais para operações matemáticas
+- https://docs.nvidia.com/cuda/cuda-math-api/index.html
+- you can use host designed operations like `log()` (host) {CPU} instead of `logf()` {GPU} (device) but they will run slower. these math essentials allow very math math operations on the device/GPU. you can pass in `-use_fast_math` to the nvcc compiler to convert to these device only ops at the cost of barely noticeable precision error.
+- `--fmad=true` for fused multiply-add
