@@ -47,6 +47,15 @@ int leastPriority, greatestPriority;
 nvcc -o 01 01_stream_basics.cu
 nvcc -o 02 02_stream_advanced.cu
 
+# Events 
+
+- Mensuram o tempo de execução do kernel, eventos são colocados antes e depois do kernel se lançar para ver quanto demorou no processo
+- Sincronização entre os streams, eventos podem ser usados para criar dependencias entre diferentes streams, garantindo que uma operação comece apenas quando outra for completada
+- Overlapping computation e data transfer: Events podem marcar o termino de uma transferencia de dados, sinalizando que a computação pode ser feito naqueles dados ( gatilho )
+
+# Callbacks ( 02_stream_advanced )
+
+Usando callbacks você consegue montar pipelines onde quando uma operação é completa na GPU ( DEVICE ) ela gatilha o começo de outra operação na CPU ( HOST ), que vai colocar na fila mais trabalho pra GPU ( batch )
 
 
 
